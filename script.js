@@ -18,7 +18,9 @@ for(post of data){
         <p class="col">${post.author}</p>
         <p class="col" >${post.date}</p>
       </div>
-      <button onclick="deletePost(${(post.id) })" class="btn btn-danger btn-sm">Delete</buton>
+      <button onclick="deletePost('${(post.id)}')" class="btn btn-danger btn-sm">Delete</buton>
+      <button onclick="editPost('${(post.id)}')" class="btn btn-success ms-4 btn-sm">Update</buton>
+
     </div>
     </div>
     `
@@ -31,7 +33,8 @@ for(post of data){
 const add_form = document.getElementById("add_post_form");
 
 add_form.addEventListener("submit", (event)=>{
-      event.preventDefault();
+        event.preventDefault();
+
 
       const title = document.getElementById("title").value;
       const description = document.getElementById("description").value;
@@ -77,4 +80,49 @@ function deletePost(id){
           message.innerText = "Post deleted Successfully"
   })
   
+}
+
+
+// Edit
+function editPost(id)
+{
+  fetch(`http://localhost:3000/posts/${id}`)
+  .then((res) => res.json())
+  .then((data) => {
+
+    const edit_container = document.getElementById("edit_container")
+
+    edit_container.innerHTML = `
+                   <h5>Edit Post</h5>
+                <div id="message" class="text-success" role="alert">
+                       <!-- This is where the success message will be displayed -->
+                </div>
+                <form id="add_post_form">
+                  <div class="mb-3">
+                    <input type="text" class="form-control" id="title" required placeholder="Title" >
+                  </div>
+                  <div class="mb-3">
+                    <input type="text" class="form-control" id="imageUrl" required placeholder="Image URL" >
+                  </div>
+        
+                  <div class="mb-3">
+                    <input type="text" class="form-control" id="author" required placeholder="Author" >
+                  </div>
+        
+                  <div class="mb-3">
+                    <input type="date" class="form-control" id="date" required placeholder="Date" >
+                  </div>
+        
+                  <div class="mb-3">
+                    <textarea type="text" rows="4" placeholder="Description" class="form-control"  id="description"  > </textarea>
+                  </div>
+             
+                
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+    
+    `
+      console.log(data);
+      
+  })
 }
