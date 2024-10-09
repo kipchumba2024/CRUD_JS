@@ -21,6 +21,8 @@ for(post of data){
       <button onclick="deletePost('${(post.id)}')" class="btn btn-danger btn-sm">Delete</buton>
       <button onclick="editPost('${(post.id)}')" class="btn btn-success ms-4 btn-sm">Update</buton>
 
+      <button onclick="viewPost('${(post.id)}')" class="btn btn-primary ms-4 btn-sm">View Post</buton>
+
     </div>
     </div>
     `
@@ -47,7 +49,7 @@ add_form.addEventListener("submit", (event)=>{
         method: 'POST',
         body: JSON.stringify({
           title: title,
-          description: description,
+          content: description,
           imageUrl: image,
           author: author,
           date: date,
@@ -83,7 +85,7 @@ function deletePost(id){
 }
 
 
-// Edit
+// Edit - Remember before you upate you need to get values first from the backend, populate it in a form and then update it using patch
 function editPost(id)
 {
   fetch(`http://localhost:3000/posts/${id}`)
@@ -94,35 +96,106 @@ function editPost(id)
 
     edit_container.innerHTML = `
                    <h5>Edit Post</h5>
-                <div id="message" class="text-success" role="alert">
+                <div id="update_message" class="text-success" role="alert">
                        <!-- This is where the success message will be displayed -->
                 </div>
-                <form id="add_post_form">
+                <form id="update_post_form">
                   <div class="mb-3">
-                    <input type="text" class="form-control" id="title" required placeholder="Title" >
+                    <input type="text" class="form-control" id="edit_title" value="${data.title}" required placeholder="Title" >
                   </div>
                   <div class="mb-3">
-                    <input type="text" class="form-control" id="imageUrl" required placeholder="Image URL" >
-                  </div>
-        
-                  <div class="mb-3">
-                    <input type="text" class="form-control" id="author" required placeholder="Author" >
+                    <input type="text" class="form-control" id="edit_imageUrl" value="${data.imageUrl}" required placeholder="Image URL" >
                   </div>
         
                   <div class="mb-3">
-                    <input type="date" class="form-control" id="date" required placeholder="Date" >
+                    <input type="text" class="form-control" id="edit_author" value="${data.author}" required placeholder="Author" >
                   </div>
         
                   <div class="mb-3">
-                    <textarea type="text" rows="4" placeholder="Description" class="form-control"  id="description"  > </textarea>
+                    <input type="date" class="form-control" id="edit_date" value="${data.date}" required placeholder="Date" >
+                  </div>
+        
+                  <div class="mb-3">
+                    <textarea type="text" rows="4" placeholder="Description"  required class="form-control"  id="edit_description" > ${data.content} </textarea>
                   </div>
              
                 
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" class="btn btn-primary">Update</button>
                 </form>
-    
     `
-      console.log(data);
+
+    const edit_form = document.getElementById("update_post_form");
+
+    edit_form.addEventListener("submit", (event)=>{
+        event.preventDefault();
+
+
+        const title = document.getElementById("edit_title").value;
+        const description = document.getElementById("edit_description").value;
+        const image = document.getElementById("edit_imageUrl").value;
+        const author = document.getElementById("edit_author").value;
+        const date = document.getElementById("edit_date").value;
+  
+
+        console.log(title, description, image, author, date)
+  
+        fetch(`http://localhost:3000/posts/${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            title: title,
+            content: description,
+            imageUrl: image,
+            author: author,
+            date: date,
+            comments: []
+          }),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        })
+          .then((response) => response.json())
+          .then((res) => {
+            const update_message = document.getElementById("update_message");
+            update_message.innerText = "Post Updated Successfully"
+  
+            
+          });
+ 
+    })
+
+   
       
   })
+}
+
+
+// Display single post
+
+function viewPost(id){
+
+  fetch(`http://localhost:3000/posts/${id}`)
+  .then((res) => res.json())
+  .then((data) => {
+
+    const single_post = document.getElementById("single_post")
+    single_post.innerHTML = `
+        <div class="mb-2">
+    <div class="bg-light p-1 border">
+      <img src=${data.imageUrl} class="img-fluid" />
+      <h6 class="fw-bold">${data.title}</h6>
+      <div class="row">
+        <p class="col">${data.author}</p>
+        <p class="col" >${data.date}</p>
+      </div>
+      <button onclick="deletePost('${(data.id)}')" class="btn btn-danger btn-sm">Delete</buton>
+      <button onclick="editPost('${(data.id)}')" class="btn btn-success ms-4 btn-sm">Update</button>
+       <p>${data.content}</p>
+    </div>
+    </div>
+    
+    `
+
+  })
+
+
 }
