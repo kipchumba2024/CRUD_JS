@@ -1,7 +1,7 @@
 
 
 // Fetch all posts
-fetch('http://localhost:3000/posts')
+fetch('https://crud-js-36k3.onrender.com/posts')
   .then((res) => res.json())
   .then((data) => {
 
@@ -45,7 +45,7 @@ add_form.addEventListener("submit", (event)=>{
       const date = document.getElementById("date").value;
 
 
-      fetch('http://localhost:3000/posts', {
+      fetch('https://crud-js-36k3.onrender.com/posts', {
         method: 'POST',
         body: JSON.stringify({
           title: title,
@@ -73,7 +73,7 @@ add_form.addEventListener("submit", (event)=>{
 // Delete post function
 function deletePost(id){
  
-  fetch(`http://localhost:3000/posts/${id}`, {
+  fetch(`https://crud-js-36k3.onrender.com/posts/${id}`, {
     method: 'DELETE',
   })
   .then((res)=> res.json() )
@@ -88,7 +88,7 @@ function deletePost(id){
 // Edit - Remember before you upate you need to get values first from the backend, populate it in a form and then update it using patch
 function editPost(id)
 {
-  fetch(`http://localhost:3000/posts/${id}`)
+  fetch(`https://crud-js-36k3.onrender.com/posts/${id}`)
   .then((res) => res.json())
   .then((data) => {
 
@@ -139,7 +139,7 @@ function editPost(id)
 
         console.log(title, description, image, author, date)
   
-        fetch(`http://localhost:3000/posts/${id}`, {
+        fetch(`https://crud-js-36k3.onrender.com/posts/${id}`, {
           method: 'PATCH',
           body: JSON.stringify({
             title: title,
@@ -173,7 +173,7 @@ function editPost(id)
 
 function viewPost(id){
 
-  fetch(`http://localhost:3000/posts/${id}`)
+  fetch(`https://crud-js-36k3.onrender.com/posts/${id}`)
   .then((res) => res.json())
   .then((data) => {
 
